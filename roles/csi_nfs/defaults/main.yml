@@ -1,0 +1,18 @@
+---
+csi_nfs_driver_enabled: false
+
+csi_nfs_driver_helm_repo_url: "https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts"
+csi_nfs_driver_helm_name: "csi-driver-nfs"
+csi_nfs_driver_helm_version: "v4.9.0"
+
+csi_nfs_driver_namespace: kube-system
+
+
+csi_nfs_storageclass_list: []
+  # - name: ""
+  #   reclaimPolicy: ""
+  #   parameters:
+  #     server: ""
+  #     share: ""
+  #   mountOptions: []
+  #   volumeBindingMode: ""

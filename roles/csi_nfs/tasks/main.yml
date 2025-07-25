@@ -1,0 +1,24 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ csi_nfs_driver_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: csi_nfs_driver_enabled
+
+- name: Deploy CSI drivers for NFS chart
+  kubernetes.core.helm:
+    name: csi-driver-nfs
+    release_namespace: "{{ csi_nfs_driver_namespace }}"
+    chart_ref: "{{ csi_nfs_driver_helm_name }}"
+    chart_version: "{{ csi_nfs_driver_helm_version }}"
+    chart_repo_url: "{{ csi_nfs_driver_helm_repo_url }}"
+    state: "{{ 'present' if csi_nfs_driver_enabled else 'absent' }}"
+    update_repo_cache: true
+
+- name: Create storages classes
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'storageclass.yml.j2') | from_yaml }}"
+  with_items: "{{ csi_nfs_storageclass_list }}"

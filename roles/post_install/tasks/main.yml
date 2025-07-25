@@ -1,0 +1,31 @@
+---
+- name: Create Kubernetes config directory
+  ansible.builtin.file:
+    path: ".kube/"
+    state: directory
+
+- name: Copy admin.conf to Home directory
+  become: true
+  ansible.builtin.copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: ".kube/config"
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0600
+    remote_src: true
+
+- name: Add kubectl completion and aliases to zsh
+  ansible.builtin.blockinfile:
+    path: ~/.zshrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (kubectl completion)"
+    block: |
+      source <(kubectl completion zsh)
+      alias k=kubectl
+      compdef __start_kubectl k
+
+- name: Add helm completion and aliases to zsh
+  ansible.builtin.blockinfile:
+    path: ~/.zshrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (helm completion)"
+    block: |
+      source <(helm completion zsh)

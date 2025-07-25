@@ -1,0 +1,123 @@
+---
+# Enable firewalld
+- name: Enable firewalld
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
+  become: true
+
+# Create zones
+- name: Create firewalld zone
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    state: present
+    permanent: true
+  become: true
+
+- name: Reload firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
+  become: true
+
+# Add rules to zones
+- name: Allow forward to zone
+  ansible.builtin.command: "firewall-cmd --zone={{ kube_firewalld_zone }} --add-forward --permanent"
+  become: true
+
+- name: Add services to zone for masters
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_services_master }}"
+  when: kube_firewalld_node_type == 'master'
+  become: true
+
+- name: Remove ports to zone for masters
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    port: "{{ item }}"
+    state: disabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_removed_ports_master }}"
+  when: kube_firewalld_node_type == 'master'
+  become: true
+
+- name: Add ports to zone for masters
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    port: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_ports_master }}"
+  when: kube_firewalld_node_type == 'master'
+  become: true
+
+- name: Add services to zone for workers
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    service: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_services_worker }}"
+  when: kube_firewalld_node_type == 'worker'
+  become: true
+
+- name: Remove ports to zone for workers
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    port: "{{ item }}"
+    state: disabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_removed_ports_worker }}"
+  when: kube_firewalld_node_type == 'worker'
+  become: true
+
+- name: Add ports to zone for workers
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    port: "{{ item }}"
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: "{{ kube_firewalld_ports_worker }}"
+  when: kube_firewalld_node_type == 'worker'
+  become: true
+
+# Add interfaces and sources to zones
+- name: Add virtual interfaces to zone
+  ansible.posix.firewalld:
+    zone: "{{ kube_firewalld_zone }}"
+    interface: "{{ item }}"
+    state: enabled
+    permanent: true
+  with_items: "{{ kube_firewalld_virtual_interfaces }}"
+  become: true
+
+- name: Set zone to physical interface
+  community.general.nmcli:
+    conn_name: "{{ item }}"
+    zone: "{{ kube_firewalld_zone }}"
+    type: ethernet
+    state: present
+  with_items: "{{ kube_firewalld_physical_interfaces }}"
+  become: true
+
+- name: Set zone as default
+  ansible.builtin.command: "firewall-cmd --set-default-zone {{ kube_firewalld_zone }}"
+  become: true
+  when: kube_firewalld_zone_as_default
+
+- name: Reload firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
+  become: true

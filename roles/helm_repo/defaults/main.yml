@@ -1,0 +1,4 @@
+---
+helm_repo_list: []
+# - name: my_repo
+#   repo_url: https://example.com/charts

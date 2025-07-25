@@ -1,0 +1,3 @@
+---
+nvidia_device_enabled: false
+nvidia_device_plugin_version: 0.17.0

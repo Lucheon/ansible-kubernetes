@@ -1,0 +1,12 @@
+namespace: lucheon
+name: kubernetes
+version: 1.0.0
+readme: README.md
+authors:
+- Etienne Barbier <etienne.barbier1@grenoble-inp.org>
+description: Collection to install plugins and utils for kubernetes.
+license:
+- GPL-2.0-or-later
+tags: []
+dependencies: {}
+repository: https://github.com/Lucheon/ansible-kubernetes

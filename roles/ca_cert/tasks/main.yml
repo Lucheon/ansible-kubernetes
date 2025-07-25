@@ -1,0 +1,60 @@
+---
+- name: Get CA secret
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: "{{ ca_cert_name }}-cluster-issuer-key"
+    namespace: "{{ ca_cert_namespace }}"
+  register: ca_cert_secret_info
+
+- name: Import CA
+  when:
+    - ca_cert_existing_crt
+    - ca_cert_existing_key
+    - ca_cert_secret_info.resources | length == 0
+  block:
+  - name: Create secret
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('template', 'secret_cluster_issuer.yml.j2') | from_yaml }}"
+
+- name: Generate new CA
+  when:
+    - (not ca_cert_existing_crt or not ca_cert_existing_key)
+    - ca_cert_secret_info.resources | length == 0
+  block:
+  - name: Create selfsigned-issuer
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('template', 'selfsigned_issuer.yml.j2') | from_yaml }}"
+
+  - name: Create CA with selfsigned-issuer
+    kubernetes.core.k8s:
+      state: present
+      definition: "{{ lookup('template', 'selfsigned_ca.yml.j2') | from_yaml }}"
+
+  - name: Delete selfsigned-issuer
+    kubernetes.core.k8s:
+      state: absent
+      api_version: cert-manager.io/v1
+      kind: Issuer
+      namespace: "{{ ca_cert_namespace }}"
+      name: selfsigned-issuer
+
+  - name: Delete certificate
+    kubernetes.core.k8s:
+      state: absent
+      api_version: cert-manager.io/v1
+      kind: Certificate
+      namespace: "{{ ca_cert_namespace }}"
+      name: "{{ ca_cert_name }}"
+
+- name: Create cluster issuer
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'cluster_issuer.yml.j2') | from_yaml }}"
+
+- name: Create bundle
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'bundle.yml.j2') | from_yaml }}"

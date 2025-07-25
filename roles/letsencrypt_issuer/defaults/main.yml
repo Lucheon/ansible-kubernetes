@@ -1,0 +1,4 @@
+---
+letsencrypt_issuer_enabled: true
+letsencrypt_issuer_email: name@example.org
+letsencrypt_issuer_solver_ingress_class: traefik

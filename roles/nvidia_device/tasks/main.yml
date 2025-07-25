@@ -1,0 +1,16 @@
+---
+- name: Add needed Helm repository
+  kubernetes.core.helm_repository:
+    name: nvidia-device-plugin
+    repo_url: https://nvidia.github.io/k8s-device-plugin
+    state: "{{ 'present' if nvidia_device_enabled else 'absent' }}"
+
+- name: Install Nvidia Device Plugin Helm chart
+  kubernetes.core.helm:
+    name: nvidia-device-plugin
+    create_namespace: true
+    chart_ref: nvidia-device-plugin/nvidia-device-plugin
+    release_namespace: nvidia-device-plugin
+    chart_version: "{{ nvidia_device_plugin_version }}"
+    state: "{{ 'present' if nvidia_device_enabled else 'absent' }}"
+    values: "{{ lookup('template', 'nvidia-device-plugin.yml.j2') | from_yaml }}"

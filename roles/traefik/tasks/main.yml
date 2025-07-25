@@ -1,0 +1,24 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ traefik_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: traefik_enabled
+
+- name: Add Traefik Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ traefik_helm_repo_name }}"
+    repo_url: "{{ traefik_helm_repo_url }}"
+  when: traefik_enabled
+
+- name: Deploy Traefik chart with values loaded from template
+  kubernetes.core.helm:
+    name: "{{ traefik_instance_name }}"
+    release_namespace: "{{ traefik_namespace }}"
+    chart_ref: "{{ traefik_helm_repo_name }}/traefik"
+    values: "{{ lookup('template', 'traefik.yml.j2') | from_yaml }}"
+    state: "{{ 'present' if traefik_enabled else 'absent' }}"
+    chart_version: "{{ traefik_helm_version }}"
+    update_repo_cache: true

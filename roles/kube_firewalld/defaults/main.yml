@@ -1,0 +1,22 @@
+---
+kube_firewalld_node_type: worker
+
+kube_firewalld_zone: public
+
+kube_firewalld_zone_as_default: false
+
+kube_firewalld_virtual_interfaces: []
+kube_firewalld_physical_interfaces: []
+kube_firewalld_networks: []
+# Master nodes
+kube_firewalld_services_master:
+  - kube-control-plane-secure
+  - ssh
+kube_firewalld_ports_master: []
+kube_firewalld_removed_ports_master: []
+# Worker nodes
+kube_firewalld_services_worker:
+  - kube-worker
+  - ssh
+kube_firewalld_ports_worker: []
+kube_firewalld_removed_ports_worker: []

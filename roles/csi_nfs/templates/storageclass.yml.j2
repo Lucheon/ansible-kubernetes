@@ -1,0 +1,10 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ item.name }}
+provisioner: nfs.csi.k8s.io
+parameters: {{ item.parameters | to_yaml }}
+reclaimPolicy: {{ item.reclaimPolicy }}
+volumeBindingMode: {{ item.volumeBindingMode }}
+mountOptions: {{ item.mountOptions | to_yaml }}

@@ -1,0 +1,6 @@
+---
+- name: Add needed Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ item.name }}"
+    repo_url: "{{ item.repo_url }}"
+  loop: "{{ helm_repo_list }}"

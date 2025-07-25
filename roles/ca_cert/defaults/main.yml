@@ -1,0 +1,22 @@
+---
+ca_cert_name: default-ca
+ca_cert_namespace: cert-manager
+ca_cert_organizations:
+  - Default
+ca_cert_duration: 87600h #10 years
+ca_cert_existing_crt:
+ca_cert_existing_key:
+
+ca_cert_bundle_name: default-bundle
+
+ca_cert_bundle_secret_selector:
+  matchLabels:
+    certificate: cacert
+    scope: all
+ca_cert_bundle_secret_key: ca.crt
+
+ca_cert_bundle_cm_selector:
+  matchLabels:
+    certificate: cacert
+    scope: all
+ca_cert_bundle_cm_key: ca.crt

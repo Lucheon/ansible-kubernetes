@@ -1,0 +1,36 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ cert_manager_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: cert_manager_cert_manager_enabled or cert_manager_trust_manager_enabled
+
+- name: Add cert-manager Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ cert_manager_helm_repo_name }}"
+    repo_url: "{{ cert_manager_helm_repo_url }}"
+  when: cert_manager_cert_manager_enabled or cert_manager_trust_manager_enabled
+
+- name: Deploy cert-manager chart with values loaded from template
+  kubernetes.core.helm:
+    atomic: true
+    name: "{{ cert_manager_cert_manager_instance_name }}"
+    release_namespace: "{{ cert_manager_namespace }}"
+    chart_ref: "{{ cert_manager_helm_repo_name }}/cert-manager"
+    values: "{{ lookup('template', 'cert-manager.yml.j2') | from_yaml }}"
+    state: "{{ 'present' if cert_manager_cert_manager_enabled else 'absent' }}"
+    chart_version: "{{ cert_manager_cert_manager_helm_version }}"
+    update_repo_cache: true
+
+- name: Deploy trust-manager chart with values loaded from template
+  kubernetes.core.helm:
+    atomic: true
+    name: "{{ cert_manager_trust_manager_instance_name }}"
+    release_namespace: "{{ cert_manager_namespace }}"
+    chart_ref: "{{ cert_manager_helm_repo_name }}/trust-manager"
+    values: "{{ lookup('template', 'trust-manager.yml.j2') | from_yaml }}"
+    state: "{{ 'present' if cert_manager_trust_manager_enabled else 'absent' }}"
+    chart_version: "{{ cert_manager_trust_manager_helm_version }}"
+    update_repo_cache: true

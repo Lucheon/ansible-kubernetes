@@ -1,0 +1,20 @@
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: {{ ca_cert_bundle_name }}
+spec:
+  sources:
+  - useDefaultCAs: true
+  - secret:
+      name: {{ ca_cert_name }}-cluster-issuer-key
+      key: tls.crt
+  - secret:
+      selector: {{ ca_cert_bundle_secret_selector }}
+      key: {{ ca_cert_bundle_secret_key }}
+  - configMap:
+      selector: {{ ca_cert_bundle_cm_selector }}
+      key: {{ ca_cert_bundle_cm_key }}
+  target:
+    configMap:
+      key: ca.crt
