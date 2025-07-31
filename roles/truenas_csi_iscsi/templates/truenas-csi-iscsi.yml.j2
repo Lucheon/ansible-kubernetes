@@ -1,0 +1,58 @@
+csiDriver:
+  name: {{ truenas_csi_iscsi_driver_name }}
+storageClasses:
+- name: {{ truenas_csi_iscsi_storage_class_name}}
+  defaultClass: {{ truenas_csi_iscsi_storage_class_is_default }}
+  reclaimPolicy: {{ truenas_csi_iscsi_reclaim_policy }}
+  volumeBindingMode: Immediate
+  allowVolumeExpansion: true
+  parameters:
+    fsType: ext4
+    detachedVolumesFromSnapshots: "false"
+  mountOptions: {{ truenas_csi_iscsi_mount_options }}
+  secrets:
+    provisioner-secret:
+    controller-publish-secret:
+    node-stage-secret:
+    node-publish-secret:
+    controller-expand-secret:
+volumeSnapshotClasses: []
+# - name: {{ truenas_csi_iscsi_volume_snapshot_class_name }}
+#   parameters:
+#     detachedSnapshots: "true"
+driver:
+  config:
+    driver: freenas-api-iscsi
+    instance_id:
+    httpConnection:
+      protocol: {{ truenas_csi_iscsi_api_protocol }}
+      host: {{ truenas_csi_iscsi_api_host }}
+      port: {{ truenas_csi_iscsi_api_port }}
+      apiKey: {{ truenas_csi_iscsi_api_key }}
+      allowInsecure: {{ truenas_csi_iscsi_api_allow_insecure }}
+      apiVersion: {{ truenas_csi_iscsi_api_version }}
+    zfs:
+      datasetParentName: {{ truenas_csi_iscsi_dataset_volumes_name }}
+      detachedSnapshotsDatasetParentName: {{ truenas_csi_iscsi_dataset_snapshots_name }}
+      zvolCompression:
+      zvolDedup:
+      zvolEnableReservation: false
+      zvolBlocksize:
+    iscsi:
+      targetPortal: {{ truenas_csi_iscsi_target_portal }}
+      targetPortals: {{ truenas_csi_iscsi_target_portals }}
+      interface:
+      namePrefix: {{ truenas_csi_iscsi_name_prefix }}
+      nameSuffix: {{ truenas_csi_iscsi_name_suffix }}
+      targetGroups: {{ truenas_csi_iscsi_target_groups }}
+      extentInsecureTpc: {{ truenas_csi_iscsi_extent_insecure_tpc }}
+      extentXenCompat: {{ truenas_csi_iscsi_extent_xen_compat }}
+      extentDisablePhysicalBlocksize: {{ truenas_csi_iscsi_extent_disable_physical_blocksize }}
+      extentBlocksize: {{ truenas_csi_iscsi_extent_blocksize }}
+      extentRpm: {{ truenas_csi_iscsi_extent_rpm }}
+      extentAvailThreshold: {{ truenas_csi_iscsi_extent_avail_threshold }}
+
+controller:
+  driver:
+    image:
+      tag: {{ truenas_csi_iscsi_driver_image_tag }}

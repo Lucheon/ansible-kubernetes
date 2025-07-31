@@ -1,0 +1,51 @@
+---
+truenas_csi_nfs_enabled: false
+
+truenas_csi_nfs_helm_repo_name: "democratic-csi"
+truenas_csi_nfs_helm_repo_url: "https://democratic-csi.github.io/charts/"
+
+truenas_csi_nfs_helm_version: 0.15.0
+
+truenas_csi_nfs_namespace: truenas-csi
+
+truenas_csi_nfs_instance_name: truenas-csi-nfs
+
+truenas_csi_nfs_driver_name: "truenas-csi.nfs"
+
+truenas_csi_nfs_storage_class_name: "truenas-nfs"
+
+truenas_csi_nfs_storage_class_is_default: false
+
+truenas_csi_nfs_volume_snapshot_class_name: "truenas-nfs"
+
+truenas_csi_nfs_reclaim_policy: "Delete"
+
+truenas_csi_nfs_mount_options:
+  - noatime
+  - nfsvers=3
+
+truenas_csi_nfs_driver_image_tag: ""
+
+truenas_csi_nfs_api_protocol: http
+truenas_csi_nfs_api_host: "10.10.20.20"
+truenas_csi_nfs_api_port: 80
+truenas_csi_nfs_api_key:
+truenas_csi_nfs_api_allow_insecure: true
+truenas_csi_nfs_api_version: 2
+
+truenas_csi_nfs_dataset_volumes_name: storage/k8s/nfs/v
+truenas_csi_nfs_dataset_snapshots_name: storage/k8s/nfs/s
+truenas_csi_nfs_dataset_permissions_enable_quotas: true
+truenas_csi_nfs_dataset_permissions_enable_reservation: false
+truenas_csi_nfs_dataset_permissions_mode: "0777"
+truenas_csi_nfs_dataset_permissions_user: 0
+truenas_csi_nfs_dataset_permissions_group: 0
+
+truenas_csi_nfs_share_host: "10.10.20.20"
+truenas_csi_nfs_share_all_dirs: false
+truenas_csi_nfs_share_allowed_hosts: []
+truenas_csi_nfs_share_allowed_networks: []
+truenas_csi_nfs_share_maproot_user: root
+truenas_csi_nfs_share_maproot_group: root
+truenas_csi_nfs_share_mapall_user: ""
+truenas_csi_nfs_share_mapall_group: ""

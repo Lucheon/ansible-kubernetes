@@ -1,0 +1,24 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ truenas_csi_nfs_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: truenas_csi_nfs_enabled
+
+- name: Add Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ truenas_csi_nfs_helm_repo_name }}"
+    repo_url: "{{ truenas_csi_nfs_helm_repo_url }}"
+  when: truenas_csi_nfs_enabled
+
+- name: Deploy chart with values loaded from template
+  kubernetes.core.helm:
+    name: "{{ truenas_csi_nfs_instance_name }}"
+    release_namespace: "{{ truenas_csi_nfs_namespace }}"
+    chart_ref: "{{ truenas_csi_nfs_helm_repo_name }}/democratic-csi"
+    values: "{{ lookup('template', 'truenas-csi-nfs.yml.j2') | from_yaml }}"
+    state: "{{ 'present' if truenas_csi_nfs_enabled else 'absent' }}"
+    chart_version: "{{ truenas_csi_nfs_helm_version }}"
+    update_repo_cache: true

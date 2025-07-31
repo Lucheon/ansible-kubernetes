@@ -1,0 +1,51 @@
+---
+truenas_csi_iscsi_enabled: false
+
+truenas_csi_iscsi_helm_repo_name: "democratic-csi"
+truenas_csi_iscsi_helm_repo_url: "https://democratic-csi.github.io/charts/"
+
+truenas_csi_iscsi_helm_version: 0.15.0
+
+truenas_csi_iscsi_namespace: truenas-csi
+
+truenas_csi_iscsi_instance_name: truenas-csi-iscsi
+
+truenas_csi_iscsi_driver_name: "truenas-csi.iscsi"
+
+truenas_csi_iscsi_storage_class_name: "truenas-iscsi"
+
+truenas_csi_iscsi_storage_class_is_default: false
+
+truenas_csi_iscsi_volume_snapshot_class_name: "truenas-iscsi"
+
+truenas_csi_iscsi_reclaim_policy: "Delete"
+
+truenas_csi_iscsi_mount_options: []
+
+truenas_csi_iscsi_driver_image_tag: ""
+
+truenas_csi_iscsi_api_protocol: http
+truenas_csi_iscsi_api_host: "10.10.20.20"
+truenas_csi_iscsi_api_port: 80
+truenas_csi_iscsi_api_key:
+truenas_csi_iscsi_api_allow_insecure: true
+truenas_csi_iscsi_api_version: 2
+
+truenas_csi_iscsi_dataset_volumes_name: storage/k8s/iscsi/v
+truenas_csi_iscsi_dataset_snapshots_name: storage/k8s/iscsi/s
+
+truenas_csi_iscsi_target_portal: "10.10.20.100:3260"
+truenas_csi_iscsi_target_portals: []
+truenas_csi_iscsi_name_prefix: csi-
+truenas_csi_iscsi_name_suffix: "-clustera"
+truenas_csi_iscsi_target_groups:
+  - targetGroupPortalGroup: 8
+    targetGroupInitiatorGroup: 14
+    targetGroupAuthType: None
+    targetGroupAuthGroup:
+truenas_csi_iscsi_extent_insecure_tpc: true
+truenas_csi_iscsi_extent_xen_compat: false
+truenas_csi_iscsi_extent_disable_physical_blocksize: true
+truenas_csi_iscsi_extent_blocksize: 512
+truenas_csi_iscsi_extent_rpm: "SSD"
+truenas_csi_iscsi_extent_avail_threshold: 0
