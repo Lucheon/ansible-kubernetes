@@ -18,7 +18,7 @@
     name: "{{ truenas_csi_iscsi_instance_name }}"
     release_namespace: "{{ truenas_csi_iscsi_namespace }}"
     chart_ref: "{{ truenas_csi_iscsi_helm_repo_name }}/democratic-csi"
-    values: "{{ lookup('template', 'truenas-csi-iscsi.yml.j2') | from_yaml }}"
+    values: "{{ truenas_csi_iscsi_values | from_yaml }}"
     state: "{{ 'present' if truenas_csi_iscsi_enabled else 'absent' }}"
     chart_version: "{{ truenas_csi_iscsi_helm_version }}"
     update_repo_cache: true

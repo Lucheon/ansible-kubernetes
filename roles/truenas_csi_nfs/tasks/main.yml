@@ -18,7 +18,7 @@
     name: "{{ truenas_csi_nfs_instance_name }}"
     release_namespace: "{{ truenas_csi_nfs_namespace }}"
     chart_ref: "{{ truenas_csi_nfs_helm_repo_name }}/democratic-csi"
-    values: "{{ lookup('template', 'truenas-csi-nfs.yml.j2') | from_yaml }}"
+    values: "{{ truenas_csi_nfs_values | from_yaml }}"
     state: "{{ 'present' if truenas_csi_nfs_enabled else 'absent' }}"
     chart_version: "{{ truenas_csi_nfs_helm_version }}"
     update_repo_cache: true
