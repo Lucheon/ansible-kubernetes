@@ -1,0 +1,13 @@
+---
+argo_cd_enabled: false
+
+argo_cd_helm_repo_name: "argo"
+argo_cd_helm_repo_url: "https://argoproj.github.io/argo-helm"
+
+argo_cd_helm_version: 9.3.5
+
+argo_cd_namespace: argocd
+
+argo_cd_instance_name: argocd
+
+argo_cd_values: {}

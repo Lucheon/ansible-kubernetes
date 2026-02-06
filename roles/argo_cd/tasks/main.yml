@@ -1,0 +1,24 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ argo_cd_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: argo_cd_enabled
+
+- name: Add Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ argo_cd_helm_repo_name }}"
+    repo_url: "{{ argo_cd_helm_repo_url }}"
+  when: argo_cd_enabled
+
+- name: Deploy chart with values loaded from template
+  kubernetes.core.helm:
+    name: "{{ argo_cd_instance_name }}"
+    release_namespace: "{{ argo_cd_namespace }}"
+    chart_ref: "{{ argo_cd_helm_repo_name }}/argo-cd"
+    values: "{{ argo_cd_values | from_yaml }}"
+    state: "{{ 'present' if argo_cd_enabled else 'absent' }}"
+    chart_version: "{{ argo_cd_helm_version }}"
+    update_repo_cache: true
