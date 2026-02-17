@@ -26,6 +26,8 @@ traefik_service_metrics_nodeport: null
 traefik_service_externalsIPs: []
 traefik_service_annotations: {}
 
+traefik_gateway_ip: null
+
 traefik_dashboard_enabled: false
 traefik_dashboard_username: admin
 traefik_dashboard_password: changeme
