@@ -1,0 +1,18 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ flux_operator_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: flux_operator_enabled
+
+- name: Deploy chart with values loaded from template
+  kubernetes.core.helm:
+    name: "{{ flux_operator_instance_name }}"
+    release_namespace: "{{ flux_operator_namespace }}"
+    chart_ref: "{{ flux_operator_helm_chart_ref }}"
+    values: "{{ flux_operator_values | from_yaml }}"
+    state: "{{ 'present' if flux_operator_enabled else 'absent' }}"
+    chart_version: "{{ flux_operator_helm_version }}"
+    update_repo_cache: true

@@ -1,0 +1,12 @@
+---
+flux_operator_enabled: false
+
+flux_operator_helm_chart_ref: "oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator"
+
+flux_operator_helm_version: 0.41.1
+
+flux_operator_namespace: flux-system
+
+flux_operator_instance_name: flux-operator
+
+flux_operator_values: {}
