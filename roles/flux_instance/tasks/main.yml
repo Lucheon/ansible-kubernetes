@@ -1,0 +1,25 @@
+---
+- name: Create a k8s namespace
+  kubernetes.core.k8s:
+    name: "{{ flux_instance_namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
+  when: flux_instance_enabled
+
+- name: Deploy secrets
+  kubernetes.core.k8s:
+    namespace: "{{ flux_instance_namespace }}"
+    definition: "{{ item | from_yaml }}"
+    state: "present"
+  loop: "{{ flux_instance_secrets_definition }}"
+
+- name: Deploy chart
+  kubernetes.core.helm:
+    name: "{{ flux_instance_instance_name }}"
+    release_namespace: "{{ flux_instance_namespace }}"
+    chart_ref: "{{ flux_instance_helm_chart_ref }}"
+    values: "{{ flux_instance_values | from_yaml }}"
+    state: "{{ 'present' if flux_instance_enabled else 'absent' }}"
+    chart_version: "{{ flux_instance_helm_version }}"
+    update_repo_cache: true

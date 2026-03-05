@@ -1,0 +1,14 @@
+---
+flux_instance_enabled: false
+
+flux_instance_helm_chart_ref: "oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance"
+
+flux_instance_helm_version: 0.41.1
+
+flux_instance_namespace: flux-system
+
+flux_instance_instance_name: flux
+
+flux_instance_values: {}
+
+flux_instance_secrets_definition: {}
